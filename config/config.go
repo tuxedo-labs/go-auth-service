@@ -10,7 +10,7 @@ import (
 
 var DB *gorm.DB
 
-func Connect() error {
+func DBConnect() error {
 	dsn := os.Getenv("APP_MYSQL")
 	fmt.Println(dsn)
 
