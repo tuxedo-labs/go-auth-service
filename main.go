@@ -1,9 +1,19 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"log"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
+)
 
 func main() {
-  app := fiber.New()
+	app := fiber.New()
 
-  app.Listen(":3000")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	app.Listen(":3000")
 }
