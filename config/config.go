@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"micro/internal/models/entity"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -21,6 +22,8 @@ func DBConnect() error {
 	}
 
 	DB = db
+
+  DB.AutoMigrate(entity.Users{})
 
 	fmt.Println("Database is connected!")
 	return nil
