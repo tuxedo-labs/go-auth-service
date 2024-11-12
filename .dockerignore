@@ -1,0 +1,17 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Log and OS generated files
+*.log
+*.lock
+.DS_Store
+
+# Folder yang tidak perlu dimasukkan ke dalam Docker image
+vendor/
+.env
+.git/
+
