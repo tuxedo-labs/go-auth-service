@@ -211,3 +211,7 @@ func SaveGithubUser(fristName, lastName, email string) error {
 
 	return nil
 }
+
+func ApiGateway(token string) error {
+    return nil
+}
