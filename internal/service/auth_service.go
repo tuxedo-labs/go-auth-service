@@ -28,7 +28,7 @@ func GetUserByEmail(email string) (*entity.Users, error) {
 	err := config.DB.First(&user, "email = ?", email).Error
 	return &user, err
 }
- 
+
 func GenerateJWTToken(user *entity.Users) (string, error) {
 	claims := jwt.MapClaims{
 		"id":    user.ID,

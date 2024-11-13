@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"micro/config"
+	"micro/internal/handler"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,19 @@ func main() {
 	}
 
 	config.DBConnect()
+
+    // init the router on here
+    app.Post("/api/auth/login", handler.Login)
+	app.Post("/api/auth/register", handler.Register)
+
+	// oauth google provider
+	app.Get("/api/auth/google", handler.AuthGoogle)
+	app.Get("/api/auth/google/callback", handler.CallbackAuthGoogle)
+
+	// oauth github provider
+	app.Get("/api/auth/github", handler.AuthGithub)
+	app.Get("/api/auth/github/callback", handler.CallbackAuthGithub)
+
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {
