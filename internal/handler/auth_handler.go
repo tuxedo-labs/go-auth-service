@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"micro/internal/models/request"
 	"micro/internal/service"
 	"micro/pkg/provider"
 	"strings"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -18,14 +19,14 @@ func Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	if errValidate := services.ValidateLogin(loginRequest); errValidate != nil {
+	if errValidate := service.ValidateLogin(loginRequest); errValidate != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Validation failed",
 			"error":   errValidate.Error(),
 		})
 	}
 
-	user, err := services.AuthenticateUser(loginRequest.Email, loginRequest.Password)
+	user, err := service.AuthenticateUser(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Invalid email or password",
@@ -38,7 +39,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token, errGenerateToken := services.GenerateJWTToken(user)
+	token, errGenerateToken := service.GenerateJWTToken(user)
 	if errGenerateToken != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error generating token",
@@ -57,14 +58,14 @@ func Register(c *fiber.Ctx) error {
 		return err
 	}
 
-	if errValidate := services.ValidateRegister(registerRequest); errValidate != nil {
+	if errValidate := service.ValidateRegister(registerRequest); errValidate != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Validation failed",
 			"error":   errValidate.Error(),
 		})
 	}
 
-	result, err := services.HashAndStoreUser(registerRequest)
+	result, err := service.HashAndStoreUser(registerRequest)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("user with email %s already exists", registerRequest.Email) {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
@@ -94,14 +95,14 @@ func VerifyCode(c *fiber.Ctx) error {
 		})
 	}
 
-	verifyToken, err := services.GetVerifyToken(verifyRequest.Token)
+	verifyToken, err := service.GetVerifyToken(verifyRequest.Token)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Invalid or expired verification code",
 		})
 	}
 
-	user, err := services.GetUserByID(verifyToken.UserID)
+	user, err := service.GetUserByID(verifyToken.UserID)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -109,13 +110,13 @@ func VerifyCode(c *fiber.Ctx) error {
 	}
 
 	user.Verify = true
-	if err := services.UpdateUser(user); err != nil {
+	if err := service.UpdateUser(user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to verify user",
 		})
 	}
 
-	if err := services.DeleteVerifyToken(verifyToken.ID); err != nil {
+	if err := service.DeleteVerifyToken(verifyToken.ID); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to delete verification token",
 		})
@@ -210,23 +211,23 @@ func CallbackAuthGoogle(c *fiber.Ctx) error {
 		})
 	}
 
-	existingUser, err := services.GetUserByEmail(email)
+	existingUser, err := service.GetUserByEmail(email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if saveErr := services.SaveGoogleUser(givenName, familyName, email); saveErr != nil {
+			if saveErr := service.SaveGoogleUser(givenName, familyName, email); saveErr != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": fmt.Sprintf("Failed to save new user data: %v", saveErr),
 				})
 			}
-			existingUser, err = services.GetUserByEmail(email)
+			existingUser, err = service.GetUserByEmail(email)
 			if err != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": "Failed to fetch the newly created user",
 				})
 			}
-			jwtToken, err := services.GenerateJWTToken(existingUser)
+			jwtToken, err := service.GenerateJWTToken(existingUser)
 			if err != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
@@ -254,7 +255,7 @@ func CallbackAuthGoogle(c *fiber.Ctx) error {
 		})
 	}
 
-	jwtToken, err := services.GenerateJWTToken(existingUser)
+	jwtToken, err := service.GenerateJWTToken(existingUser)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
@@ -284,7 +285,7 @@ func CallbackAuthGoogle(c *fiber.Ctx) error {
 
 func AuthGithub(c *fiber.Ctx) error {
 	form := c.Query("from", "/")
-	url := services.GetGithubAuthUrl(form)
+	url := service.GetGithubAuthUrl(form)
 	return c.Redirect(url)
 }
 
@@ -306,7 +307,7 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 		})
 	}
 
-	userInfo, err := services.GetGithubUserInfo(token)
+	userInfo, err := service.GetGithubUserInfo(token)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
@@ -314,7 +315,7 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 		})
 	}
 
-	email, err := services.GetGithubUserPrimaryEmail(token)
+	email, err := service.GetGithubUserPrimaryEmail(token)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
@@ -322,7 +323,7 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 		})
 	}
 
-	existingUser, err := services.GetUserByEmail(email)
+	existingUser, err := service.GetUserByEmail(email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 
@@ -336,20 +337,20 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 					}
 				}
 			}
-			if saveErr := services.SaveGithubUser(firstName, lastName, email); saveErr != nil {
+			if saveErr := service.SaveGithubUser(firstName, lastName, email); saveErr != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": fmt.Sprintf("Failed to save new user data: %v", saveErr),
 				})
 			}
-			existingUser, err = services.GetUserByEmail(email)
+			existingUser, err = service.GetUserByEmail(email)
 			if err != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": "Failed to fetch the newly created user",
 				})
 			}
-			jwtToken, err := services.GenerateJWTToken(existingUser)
+			jwtToken, err := service.GenerateJWTToken(existingUser)
 			if err != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
@@ -377,7 +378,7 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 		})
 	}
 
-	jwtToken, err := services.GenerateJWTToken(existingUser)
+	jwtToken, err := service.GenerateJWTToken(existingUser)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",

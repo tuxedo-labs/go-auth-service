@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - APP_MYSQL=user:admin@tcp(db:3306)/be?charset=utf8mb4&parseTime=True&loc=Local
+    depends_on:
+      - db
+    networks:
+      - microservices
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: be
+      MYSQL_USER: user
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - microservices
+
+  redis:
+    image: redis:latest
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    driver: bridge
+
+volumes:
+  db_data:

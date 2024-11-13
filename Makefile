@@ -2,7 +2,7 @@ SERVICE_NAME=auth-service
 DOCKER_IMAGE=yourdockerhubusername/$(SERVICE_NAME)
 
 build:
-	go build -o $(SERVICE_NAME) cmd/main.go
+	go build -o $(SERVICE_NAME) main.go
 
 docker-build:
 	docker build -t $(DOCKER_IMAGE):latest .
