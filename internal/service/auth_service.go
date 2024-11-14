@@ -18,17 +18,20 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// validate login req
 func ValidateLogin(loginRequest *request.LoginRequest) error {
 	validate := validator.New()
 	return validate.Struct(loginRequest)
 }
 
+// get user by emails
 func GetUserByEmail(email string) (*entity.Users, error) {
 	var user entity.Users
 	err := config.DB.First(&user, "email = ?", email).Error
 	return &user, err
 }
 
+// generate jwt token
 func GenerateJWTToken(user *entity.Users) (string, error) {
 	claims := jwt.MapClaims{
 		"id":    user.ID,
@@ -45,11 +48,14 @@ func GenerateJWTToken(user *entity.Users) (string, error) {
 	return utils.GenerateToken(&claims)
 }
 
+// validate register
 func ValidateRegister(registerRequest *request.RegisterRequest) error {
 	validate := validator.New()
 	return validate.Struct(registerRequest)
 }
 
+
+// hash and store the new users
 func HashAndStoreUser(registerRequest *request.RegisterRequest) (string, error) {
 	var existingUser entity.Users
 	if err := config.DB.First(&existingUser, "email = ?", registerRequest.Email).Error; err == nil {
@@ -78,10 +84,14 @@ func HashAndStoreUser(registerRequest *request.RegisterRequest) (string, error) 
 	return fmt.Sprintf("User %s registered successfully", newUser.Email), nil
 }
 
+
+// update users data
 func UpdateUser(user *entity.Users) error {
 	return config.DB.Save(user).Error
 }
 
+
+// auth users
 func AuthenticateUser(email, password string) (*entity.Users, error) {
 	var user entity.Users
 	err := config.DB.First(&user, "email = ?", email).Error
@@ -96,14 +106,18 @@ func AuthenticateUser(email, password string) (*entity.Users, error) {
 	return &user, nil
 }
 
+
+// google auth callback url
 func GetGoogleAuthURL(redirectURI string) string {
 	return provider.GoogleOauthConfig.AuthCodeURL(redirectURI)
 }
 
+// github auth callback url
 func GetGithubAuthUrl(redirectURI string) string {
 	return provider.GithubOauthConfig.AuthCodeURL(redirectURI)
 }
 
+// google users info
 func GetGoogleUserInfo(token *oauth2.Token) (map[string]interface{}, error) {
 	client := provider.GoogleOauthConfig.Client(context.Background(), token)
 
@@ -125,6 +139,8 @@ func GetGoogleUserInfo(token *oauth2.Token) (map[string]interface{}, error) {
 	return userInfo, nil
 }
 
+
+// github users info
 func GetGithubUserInfo(token *oauth2.Token) (map[string]interface{}, error) {
 	client := provider.GithubOauthConfig.Client(context.Background(), token)
 
@@ -146,6 +162,7 @@ func GetGithubUserInfo(token *oauth2.Token) (map[string]interface{}, error) {
 	return userInfo, nil
 }
 
+// github emails users info
 func GetGithubUserPrimaryEmail(token *oauth2.Token) (string, error) {
 	client := provider.GithubOauthConfig.Client(context.Background(), token)
 
@@ -175,6 +192,7 @@ func GetGithubUserPrimaryEmail(token *oauth2.Token) (string, error) {
 	return "", fmt.Errorf("no primary email found")
 }
 
+// save google users
 func SaveGoogleUser(firstName, lastName, email string) error {
 	provider := "google"
 	newUser := entity.Users{
@@ -193,6 +211,8 @@ func SaveGoogleUser(firstName, lastName, email string) error {
 	return nil
 }
 
+
+// save github users
 func SaveGithubUser(fristName, lastName, email string) error {
 	provider := "github"
 	newUser := entity.Users{
@@ -212,6 +232,7 @@ func SaveGithubUser(fristName, lastName, email string) error {
 	return nil
 }
 
+// on progress
 func ApiGateway(token string) error {
     return nil
 }
