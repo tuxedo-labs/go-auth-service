@@ -32,6 +32,8 @@ func main() {
 	app.Get("/api/auth/github", handler.AuthGithub)
 	app.Get("/api/auth/github/callback", handler.CallbackAuthGithub)
 
+    // verify token
+    app.Get("/api/auth/verify-token", handler.VerifyToken)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {

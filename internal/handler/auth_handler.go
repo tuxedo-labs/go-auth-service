@@ -7,6 +7,8 @@ import (
 	"micro/internal/models/request"
 	"micro/internal/service"
 	"micro/pkg/provider"
+	"micro/pkg/utils"
+	"net/http"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -316,5 +318,30 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 				UpdatedAt: existingUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 			},
 		},
+	})
+}
+
+
+func VerifyToken(c *fiber.Ctx) error {
+	token := c.Get("x-token")
+	if token == "" {
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+			"status":  false,
+			"message": "Unauthorized: Token is missing",
+		})
+	}
+
+	claims, err := utils.DecodeToken(token)
+	if err != nil {
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+			"status":  false,
+			"message": "Invalid Token",
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"status":  true,
+		"message": "Token is valid",
+		"claims":  claims,
 	})
 }

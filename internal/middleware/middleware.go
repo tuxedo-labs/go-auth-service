@@ -32,12 +32,12 @@ func Auth(c *fiber.Ctx) error {
 			"message": "User not found",
 		})
 	}
-
-	if !user.Verify {
-		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
-			"message": "Account not verified. Please check your email for verification instructions.",
-		})
-	}
+// not using feature
+	// if !user.Verify {
+	// 	return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+	// 		"message": "Account not verified. Please check your email for verification instructions.",
+	// 	})
+	// }
 
 	c.Locals("usersInfo", claims)
 	c.Locals("role", claims["role"])
