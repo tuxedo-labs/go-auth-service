@@ -23,7 +23,7 @@ func DBConnect() error {
 
 	DB = db
 
-  DB.AutoMigrate(entity.Users{})
+    DB.AutoMigrate(entity.Users{})
 
 	fmt.Println("Database is connected!")
 	return nil
