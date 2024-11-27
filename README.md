@@ -2,6 +2,7 @@
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" align="right" width="30%" style="margin: -20px 0 0 20px;">
 <h1>GO-AUTH-SERVICE</h1>
 <p align="left">
+This project is an Authentication Microservice built using Golang, designed to handle registration, login, and OAuth2 authentication processes using Google and GitHub as third party authorization providers. This project focuses on security, performance, and flexibility to be integrated with other microservices.
 	<em><code>❯ REPLACE-ME</code></em>
 </p>
 <p align="left">
@@ -38,13 +39,11 @@
 
 ##  Overview
 
-<code>❯ REPLACE-ME</code>
 
 ---
 
 ##  Features
 
-<code>❯ REPLACE-ME</code>
 
 ---
 
