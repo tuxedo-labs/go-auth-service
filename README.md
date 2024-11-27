@@ -1,22 +1,24 @@
-<div align="left" style="position: relative;">
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" align="right" width="30%" style="margin: -20px 0 0 20px;">
-<h1>GO-AUTH-SERVICE</h1>
-<p align="left">
-This project is an Authentication Microservice built using Golang, designed to handle registration, login, and OAuth2 authentication processes using Google and GitHub as third party authorization providers. This project focuses on security, performance, and flexibility to be integrated with other microservices.
+<div align="left">
+    <img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" width="40%" align="left" style="margin-right: 15px"/>
+    <div style="display: inline-block;">
+        <h2 style="display: inline-block; vertical-align: middle; margin-top: 0;">GO-AUTH-SERVICE</h2>
+        <p>
+        This project is an Authentication Microservice built using Golang, designed to handle registration, login, and OAuth2 authentication processes using Google and GitHub as third party authorization providers. This project focuses on security, performance, and flexibility to be integrated with other microservices.
 </p>
-<p align="left">
+        <p>
 	<img src="https://img.shields.io/github/license/tuxedo-labs/go-auth-service?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
 	<img src="https://img.shields.io/github/last-commit/tuxedo-labs/go-auth-service?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 	<img src="https://img.shields.io/github/languages/top/tuxedo-labs/go-auth-service?style=default&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/tuxedo-labs/go-auth-service?style=default&color=0080ff" alt="repo-language-count">
 </p>
-<p align="left"><!-- default option, no dependency badges. -->
+        <p><!-- default option, no dependency badges. -->
 </p>
-<p align="left">
+        <p>
 	<!-- default option, no dependency badges. -->
 </p>
+    </div>
 </div>
-<br clear="right">
+<br clear="left"/>
 
 ##  Table of Contents
 
@@ -35,9 +37,18 @@ This project is an Authentication Microservice built using Golang, designed to h
 - [ Acknowledgments](#-acknowledgments)
 
 ---
-<!--##  Features-->
 
-<!------->
+##  Overview
+
+<code>❯ REPLACE-ME</code>
+
+---
+
+##  Features
+
+<code>❯ REPLACE-ME</code>
+
+---
 
 ##  Project Structure
 
@@ -48,6 +59,7 @@ This project is an Authentication Microservice built using Golang, designed to h
     ├── Dockerfile
     ├── LICENSE
     ├── Makefile
+    ├── README.md
     ├── config
     │   └── config.go
     ├── docker-compose.yml
@@ -78,53 +90,7 @@ This project is an Authentication Microservice built using Golang, designed to h
 			<table>
 			<tr>
 				<td><b><a href='https://github.com/tuxedo-labs/go-auth-service/blob/master/main.go'>main.go</a></b></td>
-				<td><code>package main
-
-import (
-	"log"
-	"micro/config"
-	"micro/internal/handler"
-	"os"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
-)
-
-func main() {
-	app := fiber.New()
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
-
-	config.DBConnect()
-
-    // init the router on here
-    app.Post("/api/auth/login", handler.Login)
-	app.Post("/api/auth/register", handler.Register)
-
-	// oauth google provider
-	app.Get("/api/auth/google", handler.AuthGoogle)
-	app.Get("/api/auth/google/callback", handler.CallbackAuthGoogle)
-
-	// oauth github provider
-	app.Get("/api/auth/github", handler.AuthGithub)
-	app.Get("/api/auth/github/callback", handler.CallbackAuthGithub)
-
-    // verify token
-    app.Get("/api/auth/verify-token", handler.VerifyToken)
-
-	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = "3000"
-	}
-
-	log.Printf("Listening on port %s", port)
-	if err := app.Listen(":" + port); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
-	}
-}</code></td>
+				<td><code>❯ REPLACE-ME</code></td>
 			</tr>
 			<tr>
 				<td><b><a href='https://github.com/tuxedo-labs/go-auth-service/blob/master/go.mod'>go.mod</a></b></td>
