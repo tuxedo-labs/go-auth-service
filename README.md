@@ -145,8 +145,8 @@ Run the test suite using the following command:
 ---
 ##  Project Roadmap
 
-- [X] **`Task 1`**: <strike>Implement feature one.</strike>
-- [ ] **`Task 2`**: Implement feature two.
+- [X] **`Task 1`**: <strike>auth register and login</strike>
+- [X] **`Task 2`**: <strike>OAuth2 google & github</strike>
 - [ ] **`Task 3`**: Implement feature three.
 
 ---
