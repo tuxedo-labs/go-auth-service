@@ -28,4 +28,3 @@ response 500
   "message": "Failed to check if user exists: database connection timeout"
 }
 ```
-
