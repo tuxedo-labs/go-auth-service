@@ -3,7 +3,6 @@
 <h1>GO-AUTH-SERVICE</h1>
 <p align="left">
 This project is an Authentication Microservice built using Golang, designed to handle registration, login, and OAuth2 authentication processes using Google and GitHub as third party authorization providers. This project focuses on security, performance, and flexibility to be integrated with other microservices.
-	<em><code>❯ REPLACE-ME</code></em>
 </p>
 <p align="left">
 	<img src="https://img.shields.io/github/license/tuxedo-labs/go-auth-service?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
@@ -36,16 +35,9 @@ This project is an Authentication Microservice built using Golang, designed to h
 - [ Acknowledgments](#-acknowledgments)
 
 ---
+<!--##  Features-->
 
-##  Overview
-
-
----
-
-##  Features
-
-
----
+<!------->
 
 ##  Project Structure
 
