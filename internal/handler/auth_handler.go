@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"micro/internal/models/request"
+	"micro/internal/repository"
 	"micro/internal/service"
 	"micro/pkg/provider"
 	"micro/pkg/utils"
@@ -67,7 +68,7 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	result, err := service.HashAndStoreUser(registerRequest)
+	result, err := repository.HashAndStoreUser(registerRequest)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("user with email %s already exists", registerRequest.Email) {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
@@ -131,7 +132,7 @@ func CallbackAuthGoogle(c *fiber.Ctx) error {
 	existingUser, err := service.GetUserByEmail(email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if saveErr := service.SaveGoogleUser(givenName, familyName, email); saveErr != nil {
+			if saveErr := repository.SaveGoogleUser(givenName, familyName, email); saveErr != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": fmt.Sprintf("Failed to save new user data: %v", saveErr),
@@ -254,7 +255,7 @@ func CallbackAuthGithub(c *fiber.Ctx) error {
 					}
 				}
 			}
-			if saveErr := service.SaveGithubUser(firstName, lastName, email); saveErr != nil {
+			if saveErr := repository.SaveGithubUser(firstName, lastName, email); saveErr != nil {
 				return c.Status(500).JSON(fiber.Map{
 					"status":  "error",
 					"message": fmt.Sprintf("Failed to save new user data: %v", saveErr),

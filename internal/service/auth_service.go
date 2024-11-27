@@ -54,43 +54,6 @@ func ValidateRegister(registerRequest *request.RegisterRequest) error {
 	return validate.Struct(registerRequest)
 }
 
-
-// hash and store the new users
-func HashAndStoreUser(registerRequest *request.RegisterRequest) (string, error) {
-	var existingUser entity.Users
-	if err := config.DB.First(&existingUser, "email = ?", registerRequest.Email).Error; err == nil {
-		return "", fmt.Errorf("user with email %s already exists", registerRequest.Email)
-	}
-
-	hashedPassword, err := middleware.HashPassword(registerRequest.Password)
-	if err != nil {
-		return "", err
-	}
-
-	newUser := entity.Users{
-		Name:      fmt.Sprintf("%s %s", registerRequest.FirstName, registerRequest.LastName),
-		FirstName: registerRequest.FirstName,
-		LastName:  registerRequest.LastName,
-		Email:     registerRequest.Email,
-		Password:  hashedPassword,
-		Role:      "member",
-		Verify:    true,
-	}
-
-	if err := config.DB.Create(&newUser).Error; err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("User %s registered successfully", newUser.Email), nil
-}
-
-
-// update users data
-func UpdateUser(user *entity.Users) error {
-	return config.DB.Save(user).Error
-}
-
-
 // auth users
 func AuthenticateUser(email, password string) (*entity.Users, error) {
 	var user entity.Users
@@ -105,7 +68,6 @@ func AuthenticateUser(email, password string) (*entity.Users, error) {
 
 	return &user, nil
 }
-
 
 // google auth callback url
 func GetGoogleAuthURL(redirectURI string) string {
@@ -190,49 +152,4 @@ func GetGithubUserPrimaryEmail(token *oauth2.Token) (string, error) {
 	}
 
 	return "", fmt.Errorf("no primary email found")
-}
-
-// save google users
-func SaveGoogleUser(firstName, lastName, email string) error {
-	provider := "google"
-	newUser := entity.Users{
-		Name:      fmt.Sprintf("%s %s", firstName, lastName),
-		FirstName: firstName,
-		LastName:  lastName,
-		Email:     email,
-		Role:      "member",
-		Verify:    true,
-		Provider:  &provider,
-	}
-
-	if err := config.DB.Create(&newUser).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-
-// save github users
-func SaveGithubUser(fristName, lastName, email string) error {
-	provider := "github"
-	newUser := entity.Users{
-		Name:      fmt.Sprintf("%s %s", fristName, lastName),
-		FirstName: fristName,
-		LastName:  lastName,
-		Email:     email,
-		Role:      "member",
-		Verify:    true,
-		Provider:  &provider,
-	}
-
-	if err := config.DB.Create(&newUser).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// on progress
-func ApiGateway(token string) error {
-    return nil
 }

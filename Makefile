@@ -1,5 +1,4 @@
-SERVICE_NAME=auth-service
-DOCKER_IMAGE=yourdockerhubusername/$(SERVICE_NAME)
+SERVICE_NAME=auth_service
 
 build:
 	go build -o $(SERVICE_NAME) main.go
@@ -7,8 +6,8 @@ build:
 docker-build:
 	docker build -t $(DOCKER_IMAGE):latest .
 
-docker-push:
-	docker push $(DOCKER_IMAGE):latest
-
 clean:
 	rm -f $(SERVICE_NAME)
+
+run:
+    ./${SERVICE_NAME}
