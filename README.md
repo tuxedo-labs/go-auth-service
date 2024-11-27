@@ -1,5 +1,5 @@
 <div align="left">
-    <img src="https://avatars.githubusercontent.com/u/179362694?s=200&v=4" width="40%" align="left" style="margin-right: 15px"/>
+    <img src="https://avatars.githubusercontent.com/u/179362694?s=200&v=4" width="30%" align="left" style="margin-right: 15px"/>
     <div style="display: inline-block;">
         <h2 style="display: inline-block; vertical-align: middle; margin-top: 0;">GO-AUTH-SERVICE</h2>
         <p>
